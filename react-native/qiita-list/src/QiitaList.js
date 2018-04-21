@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, ListView, Platform } from 'react-native';
+import { StyleSheet, View, FlatList, Platform } from 'react-native';
 
 import QiitaCell from './QiitaCell';
 import QiitaIndicator from './QiitaIndicator';
@@ -7,14 +7,14 @@ import QiitaIndicator from './QiitaIndicator';
 const QIITA_URL = 'https://qiita.com/api/v2/tags/reactjs/items';
 
 const styles = StyleSheet.create({
-  containerIOS: {
-    flex: 1,
-    marginTop: 64,
-    backgroundColor: '#FFFFFF',
-  },
-  containerAndroid: {
+  container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+    ...Platform.select({
+      ios: {
+        marginTop: 64,
+      },
+    }),
   },
   listView: {
     flex: 1,
@@ -27,9 +27,7 @@ export default class QiitaList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: new ListView.DataSource({
-        rowHasChanged: (row1, row2) => row1 !== row2,
-      }),
+      items: [],
       loaded: false,
     };
   }
@@ -45,7 +43,7 @@ export default class QiitaList extends Component {
       .then(response => response.json())
       .then((responseJson) => {
         this.setState({
-          items: this.state.items.cloneWithRows(responseJson),
+          items: responseJson,
           loaded: true,
         });
       })
@@ -56,30 +54,18 @@ export default class QiitaList extends Component {
 
   renderLoadingView = () => <QiitaIndicator />;
 
-  renderItem = item => <QiitaCell onSelect={() => this.selectItem(item)} item={item} />;
+  renderItem = ({ item }) => <QiitaCell onSelect={() => this.selectItem(item)} item={item} />;
 
-  renderListView = () => {
-    if (Platform.OS === 'ios') {
-      return (
-        <View style={styles.containerIOS}>
-          <ListView
-            style={styles.listView}
-            dataSource={this.state.items}
-            renderRow={this.renderItem}
-          />
-        </View>
-      );
-    }
-    return (
-      <View style={styles.containerAndroid}>
-        <ListView
-          style={styles.listView}
-          dataSource={this.state.items}
-          renderRow={this.renderItem}
-        />
-      </View>
-    );
-  };
+  renderListView = () => (
+    <View style={styles.container}>
+      <FlatList
+        style={styles.listView}
+        data={this.state.items}
+        renderItem={this.renderItem}
+        keyExtractor={item => item.id}
+      />
+    </View>
+  );
 
   render = () => {
     if (!this.state.loaded) {
