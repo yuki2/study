@@ -1,0 +1,30 @@
+query ShowViewer {
+  viewer {
+    id
+    name
+    email
+    avatarUrl
+    company
+  }
+},
+query SearchMostTopStar($queryString: String!, $first: Int!) {
+  search(query: $queryString, type: REPOSITORY, first: $first) {
+    repositoryCount
+    edges {
+      node {
+        ... on Repository {
+          id
+          name
+          stargazers {
+            totalCount
+          }
+          forks {
+            totalCount
+          }
+          updatedAt
+          url
+        }
+      }
+    }
+  }
+}
