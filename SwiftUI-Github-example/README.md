@@ -21,5 +21,5 @@ https://developer.apple.com/jp/xcode/swiftui/
 
 #### References
 
-https://github.com/apollographql/apollo-ios
-https://developer.github.com/v4/explorer/
+- https://github.com/apollographql/apollo-ios
+- https://developer.github.com/v4/explorer/
