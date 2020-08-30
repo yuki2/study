@@ -1,5 +1,7 @@
 # Github example with SwiftUI
 
+<img src="https://user-images.githubusercontent.com/4437236/91659542-4dc2c880-eb0b-11ea-8ecd-5e13ed007901.png" width="320">
+
 This is example app to investigate how to implement Networking with SwiftUI
 
 ## What's included
